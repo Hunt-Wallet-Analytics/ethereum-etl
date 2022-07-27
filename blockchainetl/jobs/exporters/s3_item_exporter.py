@@ -53,7 +53,6 @@ class S3ItemExporter(CompositeItemExporter):
             if file.endswith('csv'):
                 csv.field_size_limit(sys.maxsize)
                 reader = csv.DictReader(f, delimiter=",")
-                next(reader)
                 for row in reader:
                     rows.append(row.get('item_timestamp'))
             elif file.endswith('json'):
