@@ -52,6 +52,11 @@ def create_item_exporter(output, **kwargs):
             batch_max_latency=2,
             batch_max_messages=1000,
             enable_message_ordering=enable_message_ordering)
+    elif item_exporter_type == ItemExporterType.KINESIS:
+        from blockchainetl.jobs.exporters.kinesis_item_exporter import KinesisItemExporter
+        item_exporter = KinesisItemExporter(
+            stream_name=output[len('kinesis://'):],
+        )
     elif item_exporter_type == ItemExporterType.POSTGRES:
         from blockchainetl.jobs.exporters.postgres_item_exporter import PostgresItemExporter
         from blockchainetl.streaming.postgres_utils import create_insert_statement_for_table
@@ -122,6 +127,8 @@ def get_bucket_and_path_from_gcs_output(output):
 def determine_item_exporter_type(output):
     if output is not None and output.startswith('projects'):
         return ItemExporterType.PUBSUB
+    if output is not None and output.startswith('kinesis://'):
+        return ItemExporterType.KINESIS
     if output is not None and output.startswith('kafka'):
         return ItemExporterType.KAFKA
     elif output is not None and output.startswith('postgresql'):
@@ -138,6 +145,7 @@ def determine_item_exporter_type(output):
 
 class ItemExporterType:
     PUBSUB = 'pubsub'
+    KINESIS = 'kinesis'
     POSTGRES = 'postgres'
     GCS = 'gcs'
     CONSOLE = 'console'
