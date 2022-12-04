@@ -79,7 +79,6 @@ class S3ItemExporter(CompositeItemExporter):
             counter = self.counter_mapping[item_type]
             if counter is not None and (counter.increment() - 1) > 0 and (os.stat(file.name).st_size > 0):
                 self.logger.info('{} items exported: {}'.format(item_type, counter.increment() - 1))
-                logging.error(file.name)
                 self.upload(self.bucket, file.name, item_type, self.extract_date_from_file(file.name), str(uuid4()) + '_' + file.name)
                 self.logger.info('Uploaded {} to S3'.format(item_type))
                 self.flush(file)
