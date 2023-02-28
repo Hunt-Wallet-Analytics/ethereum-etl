@@ -51,7 +51,7 @@ class Streamer:
         self.retry_errors = retry_errors
         self.pid_file = pid_file
 
-        if self.start_block is not None or not os.path.isfile(self.last_synced_block_file):
+        if not os.path.isfile(self.last_synced_block_file):
             init_last_synced_block_file((self.start_block or 0) - 1, self.last_synced_block_file)
 
         self.last_synced_block = read_last_synced_block(self.last_synced_block_file)
